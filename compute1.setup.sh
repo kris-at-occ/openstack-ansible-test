@@ -10,3 +10,5 @@ DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
 DEBIAN_FRONTEND=noninteractive apt-get install bridge-utils debootstrap ifenslave ifenslave-2.6 lsof lvm2 ntp ntpdate openssh-server sudo tcpdump vlan python
 
 cp /home/openstack/compute1.interfaces /etc/network/interfaces
+
+reboot
