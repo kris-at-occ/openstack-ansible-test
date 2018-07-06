@@ -46,6 +46,6 @@ ssh openstack@infra1 "sudo bash /home/openstack/infra1.setup.sh"
 echo 'run-kolla.sh: Running ssh openstack@compute1 "sudo bash /home/openstack/compute1.setup.sh"'
 ssh openstack@compute1 "sudo bash /home/openstack/compute1.setup.sh"
 echo 'run-kolla.sh: Running ssh openstack@storage1 “sudo bash /home/openstack/storage1.setup.sh”'
-ssh openstack@storage1 “sudo bash /home/openstack/storage1.setup.sh”
+ssh openstack@storage1 "sudo bash /home/openstack/storage1.setup.sh”
 
 sudo cp -r /opt/openstack-ansible/etc/openstack_deploy/* /etc/openstack_deploy
