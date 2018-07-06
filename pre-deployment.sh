@@ -24,9 +24,9 @@ ssh-copy-id openstack@storage1
 # Copy setup scripts
 
 echo 'run-kolla.sh: Running scp infra1.setup.sh openstack@infra1:/home/openstack/infra1.setup.sh'
-scp infra1.setup.sh openstack@controller1:/home/openstack/infra1.setup.sh
+scp infra1.setup.sh openstack@infra1:/home/openstack/infra1.setup.sh
 echo 'run-kolla.sh: Running scp compute1.setup.sh openstack@compute1:/home/openstack/compute1.setup.sh'
-scp compute1.setup.sh openstack@controller2:/home/openstack/compute1.setup.sh
+scp compute1.setup.sh openstack@compute1:/home/openstack/compute1.setup.sh
 echo 'run-kolla.sh: Running scp storage1.setup.sh openstack@storage1:/home/openstack/storage1.setup.sh'
 scp storage1.setup.sh openstack@storage1:/home/openstack/storage1.setup.sh
 
@@ -35,7 +35,7 @@ scp storage1.setup.sh openstack@storage1:/home/openstack/storage1.setup.sh
 echo 'run-kolla.sh: Running scp infra1.interfaces openstack@infra1:/home/openstack/infra1.interfaces'
 scp infra1.interfaces openstack@infra1:/home/openstack/infra1.interfaces
 echo 'run-kolla.sh: Running scp compute1.interfaces openstack@compute1:/home/openstack/compute1.interfaces'
-scp compute1.interfaces openstack@controller2:/home/openstack/compute1.interfaces
+scp compute1.interfaces openstack@compute1:/home/openstack/compute1.interfaces
 echo 'run-kolla.sh: Running scp storage1.interfaces openstack@storage1:/home/openstack/storage1.interfaces'
 scp storage1.interfaces openstack@storage1:/home/openstack/storage1.interfaces
 
