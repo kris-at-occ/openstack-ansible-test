@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 export LC_ALL=C
 export LC_CTYPE="UTF-8",
@@ -14,38 +14,43 @@ rm -f /home/openstack/.ssh/id_rsa.pub
 echo 'run-kolla.sh: Running ssh-keygen -t rsa'
 ssh-keygen -t rsa
 
-echo 'run-kolla.sh: Running ssh-copy-id openstack@infra1'
-ssh-copy-id openstack@infra1
-echo 'run-kolla.sh: Running ssh-copy-id openstack@compute1'
-ssh-copy-id openstack@compute1
-echo 'run-kolla.sh: Running ssh-copy-id openstack@storage1'
-ssh-copy-id openstack@storage1
+# Declare the list of target hosts
 
-# Copy setup scripts
+target_nodes=( "infra1" "compute1" "storage1" )
 
-echo 'run-kolla.sh: Running scp infra1.setup.sh openstack@infra1:/home/openstack/infra1.setup.sh'
-scp infra1.setup.sh openstack@infra1:/home/openstack/infra1.setup.sh
-echo 'run-kolla.sh: Running scp compute1.setup.sh openstack@compute1:/home/openstack/compute1.setup.sh'
-scp compute1.setup.sh openstack@compute1:/home/openstack/compute1.setup.sh
-echo 'run-kolla.sh: Running scp storage1.setup.sh openstack@storage1:/home/openstack/storage1.setup.sh'
-scp storage1.setup.sh openstack@storage1:/home/openstack/storage1.setup.sh
+for i in "${target_nodes[@]}"
+do
 
-# Copy interfaces files
+  echo "run-kolla.sh: Running ssh-copy-id openstack@$i"
+  ssh-copy-id openstack@$i
 
-echo 'run-kolla.sh: Running scp infra1.interfaces openstack@infra1:/home/openstack/infra1.interfaces'
-scp infra1.interfaces openstack@infra1:/home/openstack/infra1.interfaces
-echo 'run-kolla.sh: Running scp compute1.interfaces openstack@compute1:/home/openstack/compute1.interfaces'
-scp compute1.interfaces openstack@compute1:/home/openstack/compute1.interfaces
-echo 'run-kolla.sh: Running scp storage1.interfaces openstack@storage1:/home/openstack/storage1.interfaces'
-scp storage1.interfaces openstack@storage1:/home/openstack/storage1.interfaces
+  # Copy setup scripts
 
-# Run setup scripts
+  echo "run-kolla.sh: Running scp target.setup.sh openstack@$i:/home/openstack/target.setup.sh"
+  scp target.setup.sh openstack@$i:/home/openstack/target.setup.sh
 
-echo 'run-kolla.sh: Running ssh openstack@infra1 "sudo bash /home/openstack/infra1.setup.sh"'
-ssh openstack@infra1 "sudo bash /home/openstack/infra1.setup.sh"
-echo 'run-kolla.sh: Running ssh openstack@compute1 "sudo bash /home/openstack/compute1.setup.sh"'
-ssh openstack@compute1 "sudo bash /home/openstack/compute1.setup.sh"
-echo 'run-kolla.sh: Running ssh openstack@storage1 “sudo bash /home/openstack/storage1.setup.sh”'
-ssh openstack@storage1 "sudo bash /home/openstack/storage1.setup.sh”
+  # Copy interfaces files
 
+  echo "run-kolla.sh: Running scp $i.interfaces openstack@$i:/home/openstack/interfaces"
+  scp $i.interfaces openstack@$i:/home/openstack/interfaces
+
+  # Run setup scripts
+
+  echo "run-kolla.sh: Running ssh openstack@$i \"sudo bash /home/openstack/target.setup.sh\""
+  ssh openstack@$i "sudo bash /home/openstack/target.setup.sh"
+done
+
+# Clone OpenStack-Ansible (OSA) repository into /etc/openstack-ansible
+
+sudo git clone -b 17.0.5 https://git.openstack.org/openstack/openstack-ansible /opt/openstack-ansible
+cd /etc/openstack-ansible
+sudo scripts/bootstrap-ansible.sh
+
+# Populate /etc/openstack_deploy directory and copy Test Example config files
+
+sudo mkdir -p /etc/openstack_deploy
 sudo cp -r /opt/openstack-ansible/etc/openstack_deploy/* /etc/openstack_deploy
+sudo cp openstack_user_config.yml.test.example openstack_user_config.yml
+sudo cp user_variables.yml user_variables.yml.original
+sudo cp user_variables.yml.test.example user_variables.yml
+sudo cp openstack_user_config.yml openstack_user_config.yml.original
