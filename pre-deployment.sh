@@ -54,3 +54,8 @@ sudo cp openstack_user_config.yml.test.example openstack_user_config.yml
 sudo cp user_variables.yml user_variables.yml.original
 sudo cp user_variables.yml.test.example user_variables.yml
 sudo cp openstack_user_config.yml openstack_user_config.yml.original
+
+# Configure service credentials
+
+cd /opt/openstack-ansible
+sudo ./scripts/pw-token-gen.py --file /etc/openstack_deploy/user_secrets.yml
