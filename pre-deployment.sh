@@ -11,7 +11,15 @@ rm -f /home/openstack/.ssh/known_hosts
 rm -f /home/openstack/.ssh/id_rsa
 rm -f /home/openstack/.ssh/id_rsa.pub
 
-echo 'run-kolla.sh: Running ssh-keygen -t rsa'
+if [ ! -f /root/.ssh/id_rsa.pub ]
+then
+  echo 'Running sudo ssh-keygen -t rsa'
+  ssh-keygen -t rsa
+fi
+sudo cp /root/.ssh/id_rsa.pub /home/openstack/.ssh/special
+sudo chown openstack:openstack /home/openstack/.ssh/special
+
+echo 'Running ssh-keygen -t rsa'
 ssh-keygen -t rsa
 
 # Declare the list of target hosts
@@ -21,22 +29,25 @@ target_nodes=( "infra1" "compute1" "storage1" )
 for i in "${target_nodes[@]}"
 do
 
-  echo "run-kolla.sh: Running ssh-copy-id openstack@$i"
+  echo "Running ssh-copy-id openstack@$i"
   ssh-copy-id openstack@$i
+
+  echo "Running scp /home/openstack/.ssh/special openstack@$i:/home/openstack/.ssh/special"
+  scp /home/openstack/.ssh/special openstack@$i:/home/openstack/.ssh/special
 
   # Copy setup scripts
 
-  echo "run-kolla.sh: Running scp target.setup.sh openstack@$i:/home/openstack/target.setup.sh"
+  echo "Running scp target.setup.sh openstack@$i:/home/openstack/target.setup.sh"
   scp target.setup.sh openstack@$i:/home/openstack/target.setup.sh
 
   # Copy interfaces files
 
-  echo "run-kolla.sh: Running scp $i.interfaces openstack@$i:/home/openstack/interfaces"
+  echo "Running scp $i.interfaces openstack@$i:/home/openstack/interfaces"
   scp $i.interfaces openstack@$i:/home/openstack/interfaces
 
   # Run setup scripts
 
-  echo "run-kolla.sh: Running ssh openstack@$i \"sudo bash /home/openstack/target.setup.sh\""
+  echo "Running ssh openstack@$i \"sudo bash /home/openstack/target.setup.sh\""
   ssh openstack@$i "sudo bash /home/openstack/target.setup.sh"
 done
 
