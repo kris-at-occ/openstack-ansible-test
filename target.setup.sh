@@ -8,6 +8,7 @@ export LANG="en_US.UTF-8"
 
 mkdir /root/.ssh
 cp /home/openstack/.ssh/authorized_keys /root/.ssh/authorized_keys
+cat /home/openstack/.ssh/special >> /root/.ssh/authorized_keys
 
 # Install packages, as required in https://docs.openstack.org/project-deploy-guide/openstack-ansible/queens/targethosts.html#configuring-the-operating-system
 
