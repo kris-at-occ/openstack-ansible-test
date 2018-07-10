@@ -4,15 +4,9 @@ export LC_ALL="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
-# Configure SSH connectivity from 'deployment' to Target Hosts
+sudo apt install -y rpl
 
-if [ ! -f /root/.ssh/id_rsa.pub ]
-then
-  echo 'Running sudo ssh-keygen -t rsa'
-  ssh-keygen -t rsa
-fi
-sudo cp /root/.ssh/id_rsa.pub /home/openstack/.ssh/special
-sudo chown openstack:openstack /home/openstack/.ssh/special
+# Configure SSH connectivity from 'deployment' to Target Hosts
 
 echo 'run-kolla.sh: Cleaning directory /home/openstack/.ssh/'
 rm -f /home/openstack/.ssh/known_hosts
@@ -21,6 +15,14 @@ rm -f /home/openstack/.ssh/id_rsa.pub
 
 echo 'Running ssh-keygen -t rsa'
 ssh-keygen -t rsa
+
+sudo mkdir -p /root/.ssh
+
+cp /home/openstack/.ssh/id_rsa.pub /home/openstack/.ssh/special
+rpl openstack root /home/openstack/.ssh/special
+sudo cp /home/openstack/.ssh/id_rsa /root/.ssh/id_rsa
+sudo cp /home/openstack/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub
+sudo rpl openstack root /root/.ssh/id_rsa.pub
 
 # Declare the list of target hosts
 
