@@ -56,7 +56,7 @@ done
 # Clone OpenStack-Ansible (OSA) repository into /etc/openstack-ansible
 
 sudo git clone -b 17.0.5 https://git.openstack.org/openstack/openstack-ansible /opt/openstack-ansible
-cd /etc/openstack-ansible
+cd /opt/openstack-ansible
 sudo scripts/bootstrap-ansible.sh
 
 # Populate /etc/openstack_deploy directory and copy Test Example config files
