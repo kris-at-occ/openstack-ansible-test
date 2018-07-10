@@ -1,7 +1,7 @@
 #! /bin/sh
 
-export LC_ALL=C
-export LC_CTYPE="UTF-8",
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
 # Set-up SSH keys, as required in https://docs.openstack.org/project-deploy-guide/openstack-ansible/queens/targethosts.html#configure-ssh-keys
