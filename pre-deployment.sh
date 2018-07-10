@@ -6,11 +6,6 @@ export LANG="en_US.UTF-8"
 
 # Configure SSH connectivity from 'deployment' to Target Hosts
 
-echo 'run-kolla.sh: Cleaning directory /home/openstack/.ssh/'
-rm -f /home/openstack/.ssh/known_hosts
-rm -f /home/openstack/.ssh/id_rsa
-rm -f /home/openstack/.ssh/id_rsa.pub
-
 if [ ! -f /root/.ssh/id_rsa.pub ]
 then
   echo 'Running sudo ssh-keygen -t rsa'
@@ -18,6 +13,11 @@ then
 fi
 sudo cp /root/.ssh/id_rsa.pub /home/openstack/.ssh/special
 sudo chown openstack:openstack /home/openstack/.ssh/special
+
+echo 'run-kolla.sh: Cleaning directory /home/openstack/.ssh/'
+rm -f /home/openstack/.ssh/known_hosts
+rm -f /home/openstack/.ssh/id_rsa
+rm -f /home/openstack/.ssh/id_rsa.pub
 
 echo 'Running ssh-keygen -t rsa'
 ssh-keygen -t rsa
